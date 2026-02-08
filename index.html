@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPERAÇÃO ATA | FILIPE OLIVEIRA SANTOS</title>
+
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#8B7355">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ATA PLF">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    :root{
+      --bg:#000;
+
+      /* >>> Estilo "transparente premium" aplicado em todo o projeto */
+      --surface:rgba(13,13,13,.70);
+      --elevated:rgba(26,26,26,.62);
+      --card:rgba(20,20,20,.62);
+
+      --gold:#8B7355;--gold-light:#A0826D;
+      --yellow:#b8860b;--yellow-light:#d4a017;
+      --blue:#1e3a8a;--blue-light:#1e40af;
+      --red:#7f1d1d;--red-light:#991b1b;
+      --green:#14532d;--green-light:#166534;
+      --purple:#581c87;--purple-light:#6b21a8;
+
+      --text:#e5e5e5;--text-dim:#a3a3a3;--text-subtle:#525252;
+      --border:rgba(255,255,255,.08);--border-light:rgba(255,255,255,.12);
+      --shadow: 0 18px 45px rgba(0,0,0,.55);
+      --template-pad:22px;
+
+      --glass-blur: 9px;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Inter',sans-serif;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:url("assets/watermark.png");
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:min(900px,92vw) auto;
+      opacity:.10;
+      filter:contrast(1.05) saturate(.9);
+      pointer-events:none;
+      z-index:-1
+    }
+
+    /* Glass base */
+    .glass{
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+    }
+
+    .header{
+      position:relative;
+      height:86px;
+      background:var(--surface);
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 var(--template-pad);
+      flex-shrink:0;
+      overflow:hidden;
+      isolation:isolate;
+    }
+    .header.glass{ box-shadow: 0 10px 35px rgba(0,0,0,.35); }
+
+    .header::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(1200px 200px at 20% 10%,rgba(212,175,55,.12),transparent 55%),
+        radial-gradient(900px 240px at 80% 0%,rgba(30,64,175,.16),transparent 55%),
+        linear-gradient(180deg,rgba(255,255,255,.03),transparent 55%);
+      z-index:-2
+    }
+    .header::after{
+      content:"";
+      position:absolute;
+      inset:-10px;
+      background-image:url("assets/banner.png");
+      background-repeat:no-repeat;
+      background-position:center right;
+      background-size:520px auto;
+      opacity:.38;
+      filter:contrast(1.05) saturate(.95);
+      z-index:-1;
+      pointer-events:none
+    }
+
+    .logo-area{display:flex;align-items:center;gap:14px;min-width:0}
+    .logo-wrap{width:64px;height:64px;display:flex;align-items:center;justify-content:center;overflow:visible;flex:0 0 auto}
+    .logo-img{width:64px;height:auto;display:block;filter:drop-shadow(0 0 18px rgba(212,175,55,.22))}
+    .header-text{min-width:0}
+    .header-text h1{
+      font-size:1.08rem;
+      font-weight:900;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+      background:linear-gradient(135deg,#C9A961,#F4E5C3,#B8962E,#D4AF37,#C9A961);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      background-size:200% auto;
+      animation:metalShine 3.2s linear infinite;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis
+    }
+    @keyframes metalShine{0%{background-position:0% center}100%{background-position:200% center}}
+    .header-text p{font-size:.72rem;color:rgba(255,255,255,.86);margin-top:3px;font-weight:700;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    .header-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+    .user-stack{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+
+    .user-badge{
+      padding:9px 12px;
+      background:rgba(255,255,255,.04);
+      border-radius:12px;
+      border:1px solid var(--border);
+      font-size:.75rem;
+      font-weight:900;
+      color:var(--text-dim);
+      white-space:nowrap
+    }
+    .countdown-header{
+      font-family:'JetBrains Mono',monospace;
+      font-size:.74rem;
+      font-weight:950;
+      color:#fca5a5;
+      letter-spacing:.02em;
+      opacity:.95;
+      white-space:nowrap
+    }
+    .countdown-header b{color:#fecaca}
+
+    /* ===== NOVO: botão fullscreen no header ===== */
+    .fs-btn{
+      height:40px;
+      min-width:52px;
+      padding:0 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      transition:transform .12s ease, background .12s ease, box-shadow .12s ease, border-color .12s ease;
+      color:var(--text);
+      box-shadow:0 0 0 1px rgba(0,0,0,.20) inset;
+      font-weight:950;
+      letter-spacing:.02em;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fs-btn:active{transform:scale(.97)}
+    .fs-btn:hover{
+      background:rgba(255,255,255,.10);
+      border-color:rgba(212,175,55,.18);
+      box-shadow:0 0 0 1px rgba(212,175,55,.12) inset;
+    }
+    .fs-btn .ic{font-size:1.05rem;line-height:1}
+    .fs-btn .txt{
+      font-size:.72rem;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      opacity:.90;
+      display:none; /* mantém clean; se quiser texto, troque para inline */
+    }
+    /* ================================ */
+
+    .timer-section{
+      background:var(--surface);
+      border-bottom:1px solid var(--border);
+      padding:12px var(--template-pad);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-shrink:0;
+      flex-wrap:wrap
+    }
+    .timer-section.glass{ box-shadow: 0 10px 35px rgba(0,0,0,.28); }
+
+    .timer-left{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+    .timer-display{
+      font-family:'JetBrains Mono',monospace;
+      font-size:1.65rem;
+      font-weight:900;
+      color:var(--gold-light);
+      letter-spacing:-.02em
+    }
+    .timer-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+
+    /* ====== BOTÕES DO CRONÔMETRO ====== */
+    .timer-btn{
+      height:40px;
+      min-width:52px;
+      padding:0 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.06);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      transition:transform .12s ease, background .12s ease, box-shadow .12s ease, border-color .12s ease;
+      color:var(--text);
+      box-shadow:0 0 0 1px rgba(0,0,0,.20) inset;
+      font-weight:950;
+      letter-spacing:.02em;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .timer-btn:active{transform:scale(.97)}
+    .timer-btn:disabled{opacity:.5;cursor:not-allowed}
+
+    .timer-btn .ic{font-size:1.05rem;line-height:1;opacity:.95}
+    .timer-btn .lbl{font-size:.72rem;letter-spacing:.10em;text-transform:uppercase;opacity:.90;display:none}
+
+    .btn-start{border-color:rgba(34,197,94,.22);background:rgba(34,197,94,.12);color:#86efac;box-shadow:0 0 0 1px rgba(34,197,94,.18) inset}
+    .btn-start:hover{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.28);box-shadow:0 0 0 1px rgba(34,197,94,.22) inset}
+
+    .btn-pause{border-color:rgba(59,130,246,.22);background:rgba(59,130,246,.12);color:#93c5fd;box-shadow:0 0 0 1px rgba(59,130,246,.18) inset}
+    .btn-pause:hover{background:rgba(59,130,246,.18);border-color:rgba(59,130,246,.28);box-shadow:0 0 0 1px rgba(59,130,246,.22) inset}
+
+    .btn-stop{border-color:rgba(239,68,68,.26);background:rgba(239,68,68,.12);color:#fecaca;box-shadow:0 0 0 1px rgba(239,68,68,.18) inset}
+    .btn-stop:hover{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.32);box-shadow:0 0 0 1px rgba(239,68,68,.22) inset}
+
+    .btn-reset{border-color:rgba(234,179,8,.22);background:rgba(234,179,8,.10);color:#fde68a;box-shadow:0 0 0 1px rgba(234,179,8,.16) inset}
+    .btn-reset:hover{background:rgba(234,179,8,.16);border-color:rgba(234,179,8,.28);box-shadow:0 0 0 1px rgba(234,179,8,.20) inset}
+
+    .btn-register{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
+    .btn-register:hover{background:rgba(255,255,255,.12);border-color:rgba(212,175,55,.22);box-shadow:0 0 0 1px rgba(212,175,55,.16) inset}
+    /* ================================ */
+
+    .main{flex:1;overflow-y:auto;padding:18px var(--template-pad);padding-bottom:92px}
+    .tab{display:none}.tab.active{display:block;animation:fadeIn .18s}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .section-title{font-size:1rem;font-weight:950;margin-bottom:14px;color:var(--text);letter-spacing:-.01em}
+
+    .nav{
+      position:fixed;bottom:0;width:100%;height:66px;
+      background:var(--surface);
+      border-top:1px solid var(--border);
+      display:flex;z-index:100
+    }
+    .nav.glass{ box-shadow: 0 -10px 35px rgba(0,0,0,.28); }
+
+    .nav-btn{
+      flex:1;background:none;border:none;color:var(--text-dim);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:4px;cursor:pointer;transition:.15s;
+      font-size:.62rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase
+    }
+    .nav-btn.active{color:var(--gold-light)}
+    .nav-icon{font-size:1.24rem;line-height:1}
+
+    .controls{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+    .control-btn{
+      flex:1;
+      min-width:160px;
+      height:40px;
+      background:rgba(255,255,255,.06);
+      border:none;
+      border-radius:12px;
+      color:var(--text);
+      font-weight:950;
+      font-size:.78rem;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:.15s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset
+    }
+    .control-btn:hover{background:rgba(255,255,255,.10);box-shadow:0 0 0 1px rgba(212,175,55,.18) inset}
+    .control-btn.danger{color:#fca5a5}
+    .control-btn.compact{flex:0 0 auto;min-width:auto;width:54px;font-size:1.25rem;letter-spacing:0;padding:0}
+
+    /* Importar/Exportar: tamanho do texto (auto) */
+    .control-btn.fit{
+      flex:0 0 auto;
+      min-width:auto;
+      width:auto;
+      padding:0 14px;
+      letter-spacing:.06em;
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+      background:var(--surface);
+      border-radius:14px;
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+    }
+    .table-wrap.glass{ backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); }
+
+    .schedule-table{width:100%;border-collapse:collapse;min-width:980px;table-layout:fixed}
+    .schedule-table th{
+      background:rgba(26,26,26,.70);
+      padding:10px 8px;border-bottom:1px solid var(--border);
+      font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;
+      color:var(--text-dim);text-align:center;white-space:nowrap
+    }
+    .schedule-table th.weekend-header{color:#fca5a5}
+    .schedule-table td{border:1px solid rgba(255,255,255,.04);height:64px;padding:0;overflow:hidden}
+    .week-cell{
+      background:rgba(26,26,26,.70);
+      padding:6px;font-family:'JetBrains Mono',monospace;font-weight:950;font-size:.85rem;color:var(--gold-light);
+      text-align:center;border-right:1px solid var(--border);min-width:64px;cursor:pointer;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px
+    }
+    .week-num{font-size:.78rem}.week-time{font-size:.68rem;color:var(--text-dim)}
+
+    .day-cell{
+      width:100%;height:64px;display:flex;align-items:center;justify-content:center;
+      padding:6px;cursor:pointer;transition:.15s;font-size:.78rem;font-weight:950;
+      letter-spacing:.06em;text-transform:uppercase;overflow:hidden;text-align:center;line-height:1.12;
+      word-break:break-word;overflow-wrap:anywhere;
+      background:rgba(255,255,255,.02);
+    }
+    .day-cell:hover{background:rgba(255,255,255,.05)}.day-cell.empty{color:var(--text-subtle)}
+
+    .day-cell .cell-text{
+      display:-webkit-box;
+      -webkit-box-orient:vertical;
+      -webkit-line-clamp:4;
+      overflow:hidden;
+      max-width:100%;
+    }
+
+    .day-cell.weekend{
+      text-transform:none;
+      letter-spacing:.02em;
+      font-weight:900;
+      font-size:clamp(.58rem,.9vw,.74rem);
+      padding:6px 8px;
+    }
+    .day-cell.weekend .cell-text{-webkit-line-clamp:5;}
+
+    .alpha{border-left:3px solid #1e40af;background:rgba(30,64,175,.12);color:#93c5fd}
+    .bravo{border-left:3px solid #d4a017;background:rgba(212,160,23,.12);color:#fde68a}
+    .charlie{border-left:3px solid #991b1b;background:rgba(153,27,27,.12);color:#fca5a5}
+    .delta{border-left:3px solid #166534;background:rgba(22,101,52,.12);color:#86efac}
+    .echo{border-left:3px solid #6b21a8;background:rgba(107,33,168,.12);color:#d8b4fe}
+    .weekend{background:rgba(255,255,255,.02);color:var(--text-dim)}
+
+    .content-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px}
+    .progress-badge{
+      padding:8px 12px;background:rgba(22,101,52,.14);border-radius:12px;border:1px solid rgba(22,101,52,.30);
+      font-family:'JetBrains Mono',monospace;font-weight:950;font-size:.9rem;color:#86efac;white-space:nowrap
+    }
+
+    .subject-group{margin-bottom:14px}
+    .group-title{
+      font-size:.85rem;font-weight:950;padding:10px 14px;background:rgba(26,26,26,.68);
+      border:1px solid var(--border);border-radius:12px;margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase
+    }
+    .subject-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden}
+    .subject-header{padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:.15s}
+    .subject-header:hover{background:rgba(255,255,255,.05)}
+    .subject-name{font-weight:900;font-size:.92rem}
+    .subject-progress{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text-dim);font-weight:950;letter-spacing:.06em}
+    .subject-body{display:none;border-top:1px solid var(--border)}.subject-body.open{display:block}
+    .topic-row{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .topic-row:last-child{border:none}
+    .topic-name{font-size:.84rem;color:rgba(210,220,235,.92);flex:1}
+    .topic-name.done{color:#86efac;text-decoration:line-through;opacity:.9}
+    .status-btn{
+      padding:6px 10px;border-radius:12px;border:none;background:rgba(255,255,255,.07);
+      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
+      font-size:.66rem;font-weight:950;cursor:pointer;transition:.15s;text-transform:uppercase;letter-spacing:.08em;
+      min-width:102px;text-align:center;color:var(--text)
+    }
+    .status-btn:hover{background:rgba(255,255,255,.10)}
+    .status-btn[data-s="3"]{background:rgba(22,101,52,.34);box-shadow:0 0 0 1px rgba(22,101,52,.28) inset;color:#86efac}
+
+    .links-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+    .link-card{
+      border-radius:14px;border:1px solid rgba(255,255,255,.10);
+      padding:14px;background:rgba(255,255,255,.04);
+      cursor:pointer;transition:.15s;box-shadow:0 10px 30px rgba(0,0,0,.35);
+      position:relative;overflow:hidden
+    }
+    .link-card:hover{transform:translateY(-1px);background:rgba(255,255,255,.06)}
+    .link-card .t{font-weight:950;margin-bottom:6px}.link-card .s{font-size:.78rem;color:var(--text-dim);line-height:1.55}
+    .link-pill{display:inline-flex;gap:8px;align-items:center;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:950;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.18)}
+    .link-bar{position:absolute;left:0;top:0;bottom:0;width:4px;opacity:.95}
+    .brand-enapol{background:rgba(0,0,0,.52);border-color:rgba(255,255,255,.12)}.brand-enapol .link-bar{background:#0b0b0b}.brand-enapol .t{color:#fde68a}.brand-enapol .link-pill{border-color:rgba(253,230,138,.26);color:#fde68a}
+    .brand-juspod{background:rgba(153,27,27,.12);border-color:rgba(153,27,27,.25)}.brand-juspod .link-bar{background:#991b1b}.brand-juspod .link-pill{border-color:rgba(153,27,27,.30);color:#fecaca}
+    .brand-legfacil{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.18);backdrop-filter:blur(2px)}.brand-legfacil .link-bar{background:#991b1b}.brand-legfacil .t{color:#ff4d4d}.brand-legfacil .s{color:rgba(255,255,255,.78)}.brand-legfacil .link-pill{border-color:rgba(255,77,77,.35);background:rgba(153,27,27,.10);color:#ffb4b4}
+    .brand-tec{background:rgba(147,197,253,.18);border-color:rgba(147,197,253,.25)}.brand-tec .link-bar{background:#93c5fd}.brand-tec .t{color:#ffffff}.brand-tec .s{color:rgba(255,255,255,.78)}.brand-tec .link-pill{border-color:rgba(255,255,255,.22);color:#fff}
+    .brand-drive{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}.brand-drive .link-bar{background:linear-gradient(180deg,#34a853,#4285f4,#fbbc05,#ea4335)}.brand-drive .link-pill{border-color:rgba(255,255,255,.20);color:#fff}
+    .brand-carranza{background:rgba(128,0,32,.14);border-color:rgba(128,0,32,.28)}.brand-carranza .link-bar{background:#800020}.brand-carranza .t{color:#ffb3c6}.brand-carranza .s{color:rgba(255,255,255,.78)}.brand-carranza .link-pill{border-color:rgba(128,0,32,.35);background:rgba(128,0,32,.10);color:#ffc9d6}
+
+    .modal{
+      position:fixed;inset:0;background:rgba(0,0,0,.92);
+      z-index:200;display:none;align-items:flex-end;justify-content:center;
+      backdrop-filter:blur(6px)
+    }
+    .modal.open{display:flex;animation:fadeIn .2s}
+    .modal-content{
+      width:100%;max-width:650px;max-height:82vh;
+      background:var(--surface);
+      border-radius:16px 16px 0 0;
+      display:flex;flex-direction:column;
+      animation:slideUp .25s cubic-bezier(.18,.89,.32,1.28);
+      border-top:1px solid var(--border-light);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+    }
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .modal-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .modal-title{font-size:1rem;font-weight:950;letter-spacing:.02em}
+    .modal-close{
+      width:34px;height:34px;border-radius:12px;border:none;
+      background:rgba(255,255,255,.06);
+      box-shadow:0 0 0 1px rgba(255,255,255,.10) inset;
+      color:#fca5a5;cursor:pointer;font-size:1rem;
+      display:flex;align-items:center;justify-content:center;transition:.15s
+    }
+    .modal-close:hover{background:rgba(255,255,255,.10)}
+    .modal-body{padding:18px;overflow-y:auto}
+
+    .option-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;transition:.15s}
+    .option-card:hover{background:rgba(255,255,255,.06)}
+    .option-card.selected{border-color:rgba(212,175,55,.30);box-shadow:0 0 0 3px rgba(212,175,55,.08) inset}
+    .option-title{font-weight:950}.option-subtitle{font-size:.76rem;color:var(--text-dim);margin-top:4px}
+
+    .guide-table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.03)}
+    .guide-table th,.guide-table td{border-bottom:1px solid rgba(255,255,255,.06);padding:10px;text-align:left;font-size:.82rem;color:var(--text-dim);vertical-align:top}
+    .guide-table th{background:rgba(255,255,255,.05);color:rgba(255,255,255,.85);font-weight:950;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+    .guide-table tr:last-child td{border-bottom:none}
+
+    .phase-list{display:flex;flex-direction:column;gap:10px}
+    .phase-item{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--border);cursor:pointer;transition:.15s}
+    .phase-item:hover{background:rgba(255,255,255,.06)}
+    .phase-check{width:22px;height:22px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:950;font-family:'JetBrains Mono',monospace;color:#86efac;background:rgba(22,101,52,.18);box-shadow:0 0 0 1px rgba(22,101,52,.20) inset;flex:0 0 auto;margin-top:1px}
+    .phase-text{flex:1}.phase-title{font-weight:950;color:rgba(255,255,255,.92);margin-bottom:2px}.phase-desc{font-size:.78rem;color:var(--text-dim);line-height:1.55}
+    .phase-item.done .phase-title,.phase-item.done .phase-desc{color:#86efac;text-decoration:line-through;opacity:.92}
+    .phase-item.done .phase-check{background:rgba(22,101,52,.30);box-shadow:0 0 0 1px rgba(22,101,52,.28) inset}
+
+    .guide-acc{margin-bottom:12px}
+    .guide-acc-header{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:.15s}
+    .guide-acc-header:hover{background:rgba(255,255,255,.06)}
+    .guide-acc-header .acc-title{font-weight:950;color:var(--gold-light);letter-spacing:.01em;font-size:.92rem}
+    .guide-acc-header .acc-arrow{color:var(--text-dim);font-size:.9rem;transition:transform .2s}
+    .guide-acc-header.open .acc-arrow{transform:rotate(90deg)}
+    .guide-acc-body{display:none;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;padding:16px;margin-top:-14px;padding-top:20px}
+    .guide-acc-body.open{display:block}
+
+    .guide-sub{font-size:.88rem;font-weight:950;color:var(--text);margin:12px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+    .guide-bullet{padding-left:14px;margin:6px 0;font-size:.82rem;color:var(--text-dim);line-height:1.7}
+    .guide-bullet li{margin-bottom:4px}.guide-bullet li b{color:var(--text)}
+    .guide-formula{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#93c5fd;background:rgba(30,64,175,.12);padding:8px 12px;border-radius:10px;border:1px solid rgba(30,64,175,.20);margin:8px 0;display:inline-block}
+
+    .reta-notes{
+      width:100%;
+      min-height:140px;
+      resize:vertical;
+      background:rgba(26,26,26,.66);
+      border:1px solid var(--border);
+      border-radius:14px;
+      color:var(--text);
+      padding:12px 12px;
+      font-size:.86rem;
+      line-height:1.65;
+      outline:none;
+    }
+    .reta-notes::placeholder{color:rgba(255,255,255,.35)}
+    .reta-notes:focus{box-shadow:0 0 0 3px rgba(212,175,55,.08), 0 0 0 1px rgba(212,175,55,.18) inset;border-color:rgba(212,175,55,.22)}
+
+    .field{
+      width:100%;
+      height:40px;
+      background:rgba(26,26,26,.66);
+      border:1px solid var(--border);
+      border-radius:12px;
+      color:var(--text);
+      padding:0 10px;
+      font-size:.9rem;
+      outline:none;
+    }
+    .field:focus{box-shadow:0 0 0 3px rgba(212,175,55,.08), 0 0 0 1px rgba(212,175,55,.18) inset;border-color:rgba(212,175,55,.22)}
+    .help{font-size:.72rem;color:var(--text-dim);margin-top:6px}
+
+    @media(max-width:768px){
+      .header{padding:0 14px;height:88px}
+      .timer-section{padding:10px 14px}
+      .timer-display{font-size:1.45rem}
+      .main{padding:14px;padding-bottom:92px}
+      .schedule-table{min-width:900px}
+      .control-btn{min-width:140px}
+      .links-grid{grid-template-columns:1fr}
+      .header::after{background-size:420px auto;opacity:.32}
+      body::before{background-size:min(720px,92vw) auto;opacity:.10}
+
+      /* botões do cronômetro mais compactos no mobile */
+      .timer-btn{min-width:48px;padding:0 12px;border-radius:14px}
+
+      /* fullscreen botão também compacto */
+      .fs-btn{min-width:48px;padding:0 12px;border-radius:14px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header glass">
+    <div class="logo-area">
+      <div class="logo-wrap"><img class="logo-img" src="assets/logo-entalpia.png" alt="Entalpia Concursos"></div>
+      <div class="header-text"><h1>OPERAÇÃO ATA CONSOLIDADA</h1><p>Policial Legislativo Federal</p></div>
+    </div>
+
+    <div class="header-actions">
+      <!-- VOLTOU: botão de tela cheia (toggle) -->
+      <button class="fs-btn" id="btn-fullscreen" onclick="toggleFullscreen()" title="Tela cheia">
+        <span class="ic" id="fs-ic">⛶</span>
+        <span class="txt" id="fs-txt">FULL</span>
+      </button>
+
+      <div class="user-stack">
+        <div class="user-badge">FILIPE OLIVEIRA SANTOS</div>
+        <div class="countdown-header" id="countdown-header"><b>PROVA:</b> calculando...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timer-section glass">
+    <div class="timer-left"><div class="timer-display" id="timer-display">00:00:00</div></div>
+
+    <div class="timer-controls">
+      <button class="timer-btn btn-start" id="btn-play" onclick="timerPlay()" title="Iniciar">
+        <span class="ic">▶</span><span class="lbl">Start</span>
+      </button>
+
+      <button class="timer-btn btn-pause" id="btn-pause" onclick="timerPause()" title="Pausar">
+        <span class="ic">⏸</span><span class="lbl">Pause</span>
+      </button>
+
+      <!-- STOP: vermelho padronizado + para e abre salvar -->
+      <button class="timer-btn btn-stop" id="btn-stop" onclick="timerStop(true)" title="Parar e salvar">
+        <span class="ic">⏹</span><span class="lbl">Stop</span>
+      </button>
+
+      <button class="timer-btn btn-reset" id="btn-reset" onclick="timerReset()" title="Resetar">
+        <span class="ic">↺</span><span class="lbl">Reset</span>
+      </button>
+
+      <button class="timer-btn btn-register" id="btn-register" onclick="openRegisterModal()" title="Salvar registro">
+        <span class="ic">💾</span><span class="lbl">Salvar</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div id="plan-tab" class="tab active">
+      <div class="section-title">Plano Tático Semanal</div>
+      <div class="table-wrap glass">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th style="width:64px">SEM</th>
+              <th>SEGUNDA</th><th>TERÇA</th><th>QUARTA</th><th>QUINTA</th><th>SEXTA</th>
+              <th class="weekend-header">SÁBADO</th><th class="weekend-header">DOMINGO</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body"></tbody>
+        </table>
+      </div>
+
+      <div class="controls" style="margin-top:14px">
+        <button class="control-btn compact" onclick="addWeek()" title="Adicionar semana">+</button>
+        <button class="control-btn compact danger" onclick="removeWeek()" title="Remover semana">−</button>
+        <button class="control-btn fit" onclick="exportData()">Exportar</button>
+        <button class="control-btn fit" onclick="document.getElementById('import-file').click()">Importar</button>
+        <input type="file" id="import-file" hidden onchange="importData(this)">
+      </div>
+    </div>
+
+    <div id="mission-tab" class="tab">
+      <div class="section-title">Missão</div>
+
+      <div style="background:var(--card);border:1px solid var(--border-light);border-radius:14px;padding:18px;border-left:4px solid var(--gold);margin-bottom:16px" class="glass">
+        <h3 style="font-size:1rem;font-weight:950;color:var(--gold-light);margin-bottom:10px;letter-spacing:.02em">CARTA-MISSÃO: OPERAÇÃO ATA CONSOLIDADA</h3>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.65;margin-bottom:6px"><strong style="color:var(--text)">Alvo:</strong> Policial Legislativo Federal</p>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.65;margin-bottom:6px"><strong style="color:var(--text)">Status:</strong> MODO HYPERFOCO (Ativo)</p>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.65;margin-bottom:6px"><strong style="color:var(--text)">Data Final:</strong> 26/04/2026</p>
+        <p style="font-size:.85rem;color:var(--text-dim);line-height:1.65"><strong style="color:var(--text)">Diretriz:</strong> A falha não é uma opção.</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border-light);border-radius:14px;padding:18px;border-left:4px solid var(--blue-light);margin-bottom:16px" class="glass">
+        <h3 style="font-size:1rem;font-weight:950;color:var(--gold-light);margin-bottom:10px;letter-spacing:.02em">REGRAS DO PLANO DE ESTUDOS (DIRETRIZES)</h3>
+        <ul style="margin:0;padding-left:18px;color:var(--text-dim);font-size:.85rem;line-height:1.8">
+          <li>Sempre dividir o grupo com uma disciplina de domínio e outra de menor domínio.</li>
+          <li>Sempre iniciar os estudos com a revisão do conteúdo do dia anterior.</li>
+          <li>Em regra, cada grupo terá duas disciplinas; excepcionalmente, três.</li>
+          <li>A divisão de horas será, em regra, proporcional entre as disciplinas do grupo.</li>
+          <li>Resolver no mínimo <b style="color:var(--text)">50 questões por dia</b>.</li>
+          <li><b style="color:var(--text)">Sábados:</b> revisão sistemática | <b style="color:var(--text)">Domingos:</b> simulado + discursivas.</li>
+          <li>Análises e ajustes do planejamento somente no <b style="color:var(--text)">primeiro sábado de cada mês</b>.</li>
+        </ul>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border-light);border-radius:14px;padding:18px;border-left:4px solid var(--gold);margin-bottom:16px" class="glass">
+        <h3 style="font-size:1rem;font-weight:950;color:var(--gold-light);margin-bottom:10px;letter-spacing:.02em">RETA FINAL</h3>
+        <div style="font-size:.8rem;color:var(--text-dim);margin-bottom:10px;line-height:1.55">Observações (salva automaticamente no seu dispositivo)</div>
+        <textarea id="reta-final-notes" class="reta-notes" placeholder="Escreva aqui suas observações da Reta Final..."></textarea>
+      </div>
+
+      <div class="section-title">Progresso da Missão</div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px" class="glass">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px">
+          <div style="font-size:1rem;font-weight:950">Pontuação Total</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:950;color:var(--gold-light)">
+            <span id="total-points">0</span> pts
+          </div>
+        </div>
+        <div style="height:10px;background:rgba(26,26,26,.70);border-radius:999px;overflow:hidden;margin-bottom:8px">
+          <div id="progress-fill" style="width:0%;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:999px;transition:width .5s ease"></div>
+        </div>
+        <div style="font-size:.78rem;color:var(--text-dim);text-align:center">Meta: 15.000 pontos</div>
+      </div>
+
+      <div class="section-title">Conquistas & Objetivos</div>
+      <div class="achievements-grid" id="achievements-grid"></div>
+
+      <div class="section-title" style="margin-top:18px">Punições (pontuação negativa)</div>
+      <div id="penalties-grid"></div>
+    </div>
+
+    <div id="content-tab" class="tab">
+      <div class="content-header">
+        <div class="section-title">Conteúdo Programático</div>
+        <div class="progress-badge"><span id="total-progress">0%</span></div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px" class="glass">
+        <div style="font-weight:950;color:var(--gold-light);margin-bottom:8px">Materiais Complementares</div>
+        <div style="font-size:.82rem;color:var(--text-dim);line-height:1.6">Acesso rápido aos seus recursos. Cores seguindo a identidade das marcas.</div>
+        <div class="links-grid">
+          <div class="link-card brand-enapol" onclick="openLink('https://enapol.plataformatutory.com.br/')"><div class="link-bar"></div><div class="t">ENAPOL</div><div class="s">Curso teórico</div><div class="link-pill">ACESSAR →</div></div>
+          <div class="link-card brand-juspod" onclick="openLink('https://jusclass.editorajuspodivm.com.br/')"><div class="link-bar"></div><div class="t">JUSPODIVM</div><div class="s">Material jurídico (JusClass)</div><div class="link-pill">ENTRAR →</div></div>
+          <div class="link-card brand-legfacil" onclick="openLink('https://www.legislacaofacilitada.com.br/app/cursos')"><div class="link-bar"></div><div class="t">LEGISLAÇÃO FACILITADA</div><div class="s">Lei seca e cursos</div><div class="link-pill">ABRIR →</div></div>
+          <div class="link-card brand-tec" onclick="openLink('https://www.tecconcursos.com.br/questoes/pastas')"><div class="link-bar"></div><div class="t">TEC CONCURSOS</div><div class="s">Banco de questões</div><div class="link-pill">RESOLVER →</div></div>
+          <div class="link-card brand-carranza" onclick="openLink('https://sala.carranzacursos.com.br/entrar?utm_source=fluxo')"><div class="link-bar"></div><div class="t">CARRANZA</div><div class="s">Plataforma de estudos</div><div class="link-pill">ACESSAR →</div></div>
+          <div class="link-card brand-drive" onclick="openLink('https://drive.google.com/drive/folders/1P5V8PcsF7WM_p0EHyV_C8pHGCPDJPfqt?usp=drive_link')"><div class="link-bar"></div><div class="t">GOOGLE DRIVE</div><div class="s">Nuvem tática pessoal</div><div class="link-pill">ACESSAR →</div></div>
+        </div>
+      </div>
+
+      <div id="subjects-container"></div>
+    </div>
+
+    <div id="stats-tab" class="tab">
+      <div class="section-title">Estatísticas</div>
+
+      <div class="controls" style="margin-bottom:14px">
+        <button class="control-btn" onclick="filterStats('day',this)">HOJE</button>
+        <button class="control-btn" onclick="filterStats('week',this)">SEMANA</button>
+        <button class="control-btn" onclick="filterStats('month',this)">MÊS</button>
+        <button class="control-btn" onclick="filterStats('all',this)">GERAL</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center" class="glass">
+          <div id="kpi-time" style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:950;color:#93c5fd">0h</div>
+          <div style="font-size:.7rem;color:var(--text-dim);font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-top:4px">Tempo Total</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center" class="glass">
+          <div id="kpi-questions" style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:950;color:#fde68a">0</div>
+          <div style="font-size:.7rem;color:var(--text-dim);font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-top:4px">Questões</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center" class="glass">
+          <div id="kpi-accuracy" style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:950;color:#86efac">0%</div>
+          <div style="font-size:.7rem;color:var(--text-dim);font-weight:950;letter-spacing:.08em;text-transform:uppercase;margin-top:4px">Acertos</div>
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px" class="glass">
+        <div style="font-size:.95rem;font-weight:950;color:var(--gold-light);margin-bottom:12px;letter-spacing:.02em">Tempo por Matéria</div>
+        <div id="chart-subjects"></div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px" class="glass">
+        <div style="font-size:.95rem;font-weight:950;color:var(--gold-light);margin-bottom:12px;letter-spacing:.02em">Histórico Recente</div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+
+    <div id="guide-tab" class="tab">
+      <div class="section-title">Guia do Concurso (PLF 2026)</div>
+
+      <div style="background:var(--card);border:1px solid var(--border-light);border-radius:14px;padding:16px;margin-bottom:14px" class="glass">
+        <div style="font-size:1rem;font-weight:950;color:var(--gold-light);margin-bottom:10px;letter-spacing:.02em">Concurso Policial Legislativo Federal — Câmara dos Deputados | CEBRASPE</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+          <div style="background:rgba(26,26,26,.66);padding:10px;border-radius:12px;border:1px solid var(--border)">
+            <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Cargo</div>
+            <div style="font-size:.88rem;font-weight:950;color:var(--text)">Técnico Legislativo — PLF</div>
+          </div>
+          <div style="background:rgba(26,26,26,.66);padding:10px;border-radius:12px;border:1px solid var(--border)">
+            <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Banca</div>
+            <div style="font-size:.88rem;font-weight:950;color:var(--text)">CEBRASPE (C/E)</div>
+          </div>
+          <div style="background:rgba(26,26,26,.66);padding:10px;border-radius:12px;border:1px solid var(--border)">
+            <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Remuneração</div>
+            <div style="font-size:.88rem;font-weight:950;color:var(--gold-light)">R$ 21.328,08</div>
+          </div>
+          <div style="background:rgba(26,26,26,.66);padding:10px;border-radius:12px;border:1px solid var(--border)">
+            <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Prova</div>
+            <div style="font-size:.88rem;font-weight:950;color:var(--gold-light)">26/04/2026</div>
+          </div>
+          <div style="background:rgba(26,26,26,.66);padding:10px;border-radius:12px;border:1px solid var(--border)">
+            <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Vagas</div>
+            <div style="font-size:.88rem;font-weight:950;color:var(--text)">40 imediatas + 40 CR</div>
+          </div>
+          <div style="background:rgba(26,26,26,.66);padding:10px;border-radius:12px;border:1px solid var(--border)">
+            <div style="font-size:.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Lotação</div>
+            <div style="font-size:.88rem;font-weight:950;color:var(--text)">Brasília/DF</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;justify-content:flex-end">
+          <button class="control-btn fit" onclick="openLink('https://www.cebraspe.org.br/concursos/cd_26_pl')">SITE CEBRASPE →</button>
+        </div>
+      </div>
+
+      <div id="guide-details"></div>
+    </div>
+  </div>
+
+  <!-- Modal: Registrar Atividade -->
+  <div id="modal-register" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Registrar Atividade</div>
+        <button class="modal-close" onclick="closeModal('modal-register')">X</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:.8rem;font-weight:900;margin-bottom:6px;color:var(--text-dim)">Tempo de Estudo (minutos)</label>
+          <input type="number" id="reg-time" placeholder="0" min="1" class="field">
+          <div class="help" id="timer-suggestion"></div>
+        </div>
+
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:.8rem;font-weight:900;margin-bottom:6px;color:var(--text-dim)">Matéria</label>
+          <select id="reg-subject" class="field" onchange="onRegisterSubjectChange()">
+            <option value="Português">Português</option>
+            <option value="Inglês">Inglês</option>
+            <option value="RICD">Regimento CD</option>
+            <option value="Administrativo">Administrativo</option>
+            <option value="Constitucional">Constitucional</option>
+            <option value="Penal">Penal</option>
+            <option value="Processo Penal">Processo Penal</option>
+            <option value="Direitos Humanos">Direitos Humanos</option>
+            <option value="Criminalística">Criminalística</option>
+            <option value="Criminologia">Criminologia</option>
+            <option value="Inteligência">Inteligência</option>
+            <option value="RLM/Estatística">RLM/Estatística</option>
+            <option value="Informática">Informática</option>
+          </select>
+        </div>
+
+        <!-- Assunto -->
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:.8rem;font-weight:900;margin-bottom:6px;color:var(--text-dim)">Assunto</label>
+          <select id="reg-topic" class="field" onchange="onRegisterTopicChange()"></select>
+          <div id="reg-topic-custom-wrap" style="display:none;margin-top:10px">
+            <label style="display:block;font-size:.75rem;font-weight:900;margin-bottom:6px;color:var(--text-dim)">Assunto (personalizado)</label>
+            <input type="text" id="reg-topic-custom" class="field" placeholder="Digite o assunto...">
+          </div>
+          <div class="help">Dica: os assuntos são puxados do seu Conteúdo Programático.</div>
+        </div>
+
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:.8rem;font-weight:900;margin-bottom:6px;color:var(--text-dim)">Tipo de Atividade</label>
+          <select id="reg-type" class="field">
+            <option value="Teoria">Teoria/Aula</option>
+            <option value="Questões">Resolução de Questões</option>
+            <option value="Revisão">Revisão</option>
+            <option value="Discursiva">Discursiva/Redação</option>
+            <option value="Simulado">Simulado</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:.8rem;font-weight:900;margin-bottom:6px;color:var(--text-dim)">Questões Resolvidas (opcional)</label>
+          <input type="number" id="reg-questions" placeholder="0" min="0" class="field">
+        </div>
+
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:.8rem;font-weight:900;margin-bottom:6px;color:var(--text-dim)">Acertos (opcional)</label>
+          <input type="number" id="reg-correct" placeholder="0" min="0" class="field">
+        </div>
+
+        <button class="control-btn" style="width:100%" onclick="saveRegister()">Salvar Registro</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-day" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="day-modal-title">Ajustar Dia</div>
+        <button class="modal-close" onclick="closeModal('modal-day')">X</button>
+      </div>
+      <div class="modal-body">
+        <div id="groups-container"></div>
+        <button class="control-btn" style="width:100%" onclick="saveDay()">Confirmar</button>
+        <button class="control-btn danger" style="width:100%;margin-top:8px" onclick="clearDay()">Limpar Dia</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-weekend" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="weekend-modal-title">Fim de Semana</div>
+        <button class="modal-close" onclick="closeModal('modal-weekend')">X</button>
+      </div>
+      <div class="modal-body">
+        <div id="weekend-options"></div>
+        <button class="control-btn" style="width:100%" onclick="saveWeekend()">Confirmar</button>
+        <button class="control-btn danger" style="width:100%;margin-top:8px" onclick="clearWeekend()">Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-week-time" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="week-time-title">Tempo Semanal</div>
+        <button class="modal-close" onclick="closeModal('modal-week-time')">X</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px">
+          <button class="control-btn fit" style="min-width:auto" onclick="adjustWeekTime(-30)">-30</button>
+          <div style="flex:1;height:44px;background:rgba(26,26,26,.66);border:1px solid var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:950;color:var(--gold-light)">
+            <span id="week-time-value">0</span> min
+          </div>
+          <button class="control-btn fit" style="min-width:auto" onclick="adjustWeekTime(30)">+30</button>
+        </div>
+        <button class="control-btn" style="width:100%" onclick="saveWeekTime()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav glass">
+    <button class="nav-btn active" onclick="switchTab('plan')"><span class="nav-icon">▦</span><span>PLANO</span></button>
+    <button class="nav-btn" onclick="switchTab('mission')"><span class="nav-icon">✦</span><span>MISSÃO</span></button>
+    <button class="nav-btn" onclick="switchTab('content')"><span class="nav-icon">▣</span><span>CONTEÚDO</span></button>
+    <button class="nav-btn" onclick="switchTab('stats')"><span class="nav-icon">⌗</span><span>ESTATÍSTICAS</span></button>
+    <button class="nav-btn" onclick="switchTab('guide')"><span class="nav-icon">≣</span><span>GUIA</span></button>
+  </nav>
+
+  <script>
+    const STORAGE_KEY = 'operacao_ata_consolidada_v4';
+    function openLink(url){window.open(url,'_blank','noopener,noreferrer')}
+
+    const GROUPS = [
+      {id:'a',name:'ALPHA',subjects:['PORT','ING','RICD'],color:'alpha'},
+      {id:'b',name:'BRAVO',subjects:['ADM','CONST','RICD'],color:'bravo'},
+      {id:'c',name:'CHARLIE',subjects:['PENAL','PP','DH'],color:'charlie'},
+      {id:'d',name:'DELTA',subjects:['CRIM','CRIMI','INTEL'],color:'delta'},
+      {id:'e',name:'ECHO',subjects:['RLM','ESTAT','INFO'],color:'echo'}
+    ];
+
+    const CONTENT_STRUCTURE = [
+      {group:'ALPHA',color:'alpha',subjects:[
+        {name:'Português',topics:['Compreensão','Gêneros','Ortografia','Coesão','Morfossintaxe','Concordância','Regência','Crase','Reescrita']},
+        {name:'Inglês',topics:['Compreensão','Gramática','Formas Contemporâneas']},
+        {name:'Regimento CD',topics:['Órgãos','Comissões','Sessões','Mandato','Administração']}
+      ]},
+      {group:'BRAVO',color:'bravo',subjects:[
+        {name:'Administrativo',topics:['Organização','Atos','Agentes','Poderes','Controle','Responsabilidade','LAI','LGPD','Licitações']},
+        {name:'Constitucional',topics:['Princípios','Organização Estado','Legislativo','Processo Legislativo','Segurança Pública']}
+      ]},
+      {group:'CHARLIE',color:'charlie',subjects:[
+        {name:'Penal',topics:['Lei Penal','Teoria Crime','Ilicitude','Culpabilidade','Concurso','Crimes Pessoa','Crimes Patrimônio','Crimes AP','Leis Especiais']},
+        {name:'Processo Penal',topics:['Inquérito','Ação Penal','Provas','Prisões','Procedimentos','Recursos','Juizados']},
+        {name:'Direitos Humanos',topics:['Conceitos','DUDH','Sistema Interamericano','Convenção Americana','Uso da Força','Código ONU']}
+      ]},
+      {group:'DELTA',color:'delta',subjects:[
+        {name:'Criminalística',topics:['Definição','Perícia','Locais Crime','Vestígios','Cadeia Custódia']},
+        {name:'Criminologia',topics:['Conceito','Escolas/Teorias','Vitimologia','Prevenção']},
+        {name:'Inteligência',topics:['Conceitos','Ciclo','Análise Risco','Segurança Info','Criptografia']}
+      ]},
+      {group:'ECHO',color:'echo',subjects:[
+        {name:'RLM/Estatística',topics:['Lógica','Argumentação','Conjuntos','Probabilidade','Estatística','Amostragem']},
+        {name:'Informática',topics:['Sistemas','Redes','Segurança','Bancos de Dados','Forense']}
+      ]}
+    ];
+
+    const ACHIEVEMENTS = [
+      {id:'q50',name:'50 Questões',desc:'Diário',icon:'✓',points:10,repeatable:true},
+      {id:'q100',name:'100 Questões',desc:'Semanal',icon:'✓',points:25,repeatable:true},
+      {id:'q500',name:'500 Questões',desc:'Mensal',icon:'✓',points:100,repeatable:true},
+      {id:'q10k',name:'10.000 Questões',desc:'Meta Final',icon:'✓',points:1000,repeatable:false},
+      {id:'h4',name:'4h Líquidas',desc:'Diário',icon:'✓',points:15,repeatable:true},
+      {id:'red',name:'1 Redação',desc:'Semanal',icon:'✓',points:50,repeatable:true},
+      {id:'str7',name:'7 Dias Seguidos',desc:'Sequência',icon:'✓',points:75,repeatable:true},
+      {id:'str21',name:'21 Dias Seguidos',desc:'Sequência',icon:'✓',points:200,repeatable:true},
+      {id:'str30',name:'1 Mês Seguido',desc:'Sequência',icon:'✓',points:300,repeatable:true},
+      {id:'str90',name:'3 Meses Seguidos',desc:'Sequência',icon:'✓',points:1000,repeatable:true},
+      {id:'km5',name:'5 KM Corrida',desc:'Físico',icon:'✓',points:20,repeatable:true},
+      {id:'mat',name:'Matéria Concluída',desc:'Conteúdo',icon:'✓',points:150,repeatable:true}
+    ];
+
+    const PENALTIES = [
+      {id:'p1',name:'Faltou treino físico',desc:'Dia sem físico planejado',icon:'✕',points:-15},
+      {id:'p2',name:'Furou revisão',desc:'Pulou revisão prevista',icon:'✕',points:-25},
+      {id:'p3',name:'Zerou o dia',desc:'Nenhum estudo registrado',icon:'✕',points:-35},
+      {id:'p4',name:'Quebrou a disciplina',desc:'Fuga do plano sem compensar',icon:'✕',points:-50}
+    ];
+
+    const GUIDE_PHASES = [
+      {id:'obj',title:'Provas Objetivas (P1 + P2)',desc:'Modelo C/E · +1 acerto / −1 erro · Mín: 18 (P1) + 27 (P2) + 54 total · Top 104 por lista seguem para discursiva.'},
+      {id:'disc',title:'Prova Discursiva (P3)',desc:'2 questões (15 pts cada, 20 linhas) + 1 peça técnica (30 pts, 50 linhas) · Aprovação: NPD ≥ 30,00.'},
+      {id:'taf',title:'TAF (Eliminatório)',desc:'Barra fixa · Impulsão horizontal · Shuttle run · Natação 50m · Corrida 12min · Apto/Inapto.'},
+      {id:'svp',title:'Sindicância Vida Pregressa',desc:'FIC + certidões + antecedentes + IR · Omissões eliminam. Pode se estender até a nomeação.'},
+      {id:'psi1',title:'Avaliação Psicológica (1º momento)',desc:'Presença obrigatória · Sem caráter eliminatório · Testes de personalidade e raciocínio.'},
+      {id:'med',title:'Avaliação de Saúde',desc:'Upload de exames (laudos ≤ 180 dias, toxicológico ≤ 60 dias) · Apto/Inapto.'},
+      {id:'cf',title:'Curso de Formação',desc:'Até 480h presenciais em Brasília · 50% da remuneração · Avaliação psicológica (2º momento) eliminatória.'}
+    ];
+
+    let state = {
+      weeks:10,
+      schedule:{},
+      weekend:{},
+      weekTime:{},
+      progress:{},
+      achievements:{},
+      penalties:{},
+      timer:{seconds:0,running:false,interval:null},
+      studyLog:[],
+      ui:{guideAcc:{},guidePhases:{}},
+      missionNotes:""
+    };
+
+    let currentCell=null,currentWeek=null,tempGroup=null,tempWeekTime=0;
+
+    // ======== FULLSCREEN (auto + botão toggle) ========
+    function requestFullscreenSafe(){
+      const el=document.documentElement;
+      if(document.fullscreenElement) return true;
+      const fn = el.requestFullscreen || el.webkitRequestFullscreen;
+      if(!fn) return false;
+      try{
+        const p = fn.call(el);
+        if(p && typeof p.then === 'function'){ p.then(()=>{}).catch(()=>{}); }
+        return true;
+      }catch(e){ return false; }
+    }
+
+    function exitFullscreenSafe(){
+      const fn = document.exitFullscreen || document.webkitExitFullscreen;
+      if(!fn) return false;
+      try{
+        const p = fn.call(document);
+        if(p && typeof p.then === 'function'){ p.then(()=>{}).catch(()=>{}); }
+        return true;
+      }catch(e){ return false; }
+    }
+
+    function toggleFullscreen(){
+      if(document.fullscreenElement){
+        exitFullscreenSafe();
+      }else{
+        requestFullscreenSafe();
+      }
+      // atualização visual também acontece no fullscreenchange
+      setTimeout(updateFullscreenButton, 80);
+    }
+
+    function updateFullscreenButton(){
+      const ic = document.getElementById('fs-ic');
+      const btn = document.getElementById('btn-fullscreen');
+      if(!ic || !btn) return;
+
+      const on = !!document.fullscreenElement;
+      ic.textContent = on ? '⤢' : '⛶';
+      btn.title = on ? 'Sair da tela cheia' : 'Entrar em tela cheia';
+    }
+
+    function armFullscreenOnce(){
+      const once = () => {
+        requestFullscreenSafe();
+        window.removeEventListener('pointerdown', once, true);
+        window.removeEventListener('touchstart', once, true);
+        window.removeEventListener('keydown', once, true);
+      };
+      window.addEventListener('pointerdown', once, true);
+      window.addEventListener('touchstart', once, true);
+      window.addEventListener('keydown', once, true);
+    }
+    // ===========================================
+
+    window.onload=()=>{
+      loadState();
+      activateTab('plan');
+      renderSchedule();
+      renderContent();
+      renderAchievements();
+      renderPenalties();
+      renderGuide();
+      renderStats();
+      updateProgress();
+      updateMissionProgress();
+      updateCountdownHeader();
+      setInterval(updateCountdownHeader,1000);
+      updateTimerDisplay();
+      updateTimerButtons();
+      initMissionNotes();
+
+      // prepara assuntos do modal logo ao carregar
+      buildRegisterTopicOptions(document.getElementById('reg-subject')?.value || 'Português');
+
+      // tenta fullscreen ao carregar + arma no primeiro gesto
+      requestFullscreenSafe();
+      armFullscreenOnce();
+
+      // mantém o botão sempre sincronizado com o estado real
+      updateFullscreenButton();
+      document.addEventListener('fullscreenchange',()=>{
+        updateFullscreenButton();
+        // se o user saiu, rearmamos para próxima interação (sem forçar)
+        if(!document.fullscreenElement) armFullscreenOnce();
+      });
+    };
+
+    function loadState(){
+      const saved=localStorage.getItem(STORAGE_KEY);
+      if(!saved)return;
+      try{
+        const p=JSON.parse(saved);
+        state={...state,...p};
+        if(!state.studyLog)state.studyLog=[];
+        if(!state.timer)state.timer={seconds:0,running:false,interval:null};
+        if(!state.ui)state.ui={guideAcc:{},guidePhases:{}};
+        if(!state.ui.guideAcc)state.ui.guideAcc={};
+        if(!state.ui.guidePhases)state.ui.guidePhases={};
+        if(typeof state.missionNotes!=='string')state.missionNotes="";
+      }catch(e){console.error('Erro:',e)}
+    }
+    function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+
+    function initMissionNotes(){
+      const ta=document.getElementById('reta-final-notes');
+      if(!ta)return;
+      ta.value=state.missionNotes||"";
+      let t=null;
+      ta.addEventListener('input',()=>{
+        state.missionNotes=ta.value;
+        if(t)clearTimeout(t);
+        t=setTimeout(()=>{saveState()},180);
+      });
+    }
+
+    function activateTab(tab){
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      const el=document.getElementById(tab+'-tab');
+      if(el)el.classList.add('active');
+      const order=['plan','mission','content','stats','guide'];
+      const idx=order.indexOf(tab);
+      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+      if(idx>=0){
+        const btns=document.querySelectorAll('.nav-btn');
+        if(btns[idx])btns[idx].classList.add('active')
+      }
+      if(tab==='mission')initMissionNotes();
+      if(tab==='stats')renderStats();
+      if(tab==='guide')renderGuide();
+    }
+    function switchTab(tab){activateTab(tab)}
+
+    function updateCountdownHeader(){
+      const target=new Date('2026-04-26T00:00:00-03:00');
+      const now=new Date();
+      let diff=target.getTime()-now.getTime();
+      const el=document.getElementById('countdown-header');
+      if(!el)return;
+      if(diff<=0){el.innerHTML='<b>PROVA:</b> HOJE';return}
+      const ts=Math.floor(diff/1000);
+      const d=Math.floor(ts/86400);
+      const h=Math.floor((ts%86400)/3600);
+      const m=Math.floor((ts%3600)/60);
+      const s=ts%60;
+      el.innerHTML=`<b>PROVA:</b> ${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`
+    }
+
+    function timerPlay(){
+      if(state.timer.running)return;
+      state.timer.running=true;
+      state.timer.interval=setInterval(()=>{state.timer.seconds++;updateTimerDisplay()},1000);
+      updateTimerButtons();
+      saveState()
+    }
+    function timerPause(){
+      if(!state.timer.running)return;
+      clearInterval(state.timer.interval);
+      state.timer.running=false;
+      updateTimerButtons();
+      saveState()
+    }
+
+    function timerStop(autoSave=false){
+      clearInterval(state.timer.interval);
+      state.timer.running=false;
+      state.timer.interval=null;
+      updateTimerButtons();
+      saveState();
+
+      if(autoSave){
+        openRegisterModal(true);
+      }
+    }
+
+    function timerReset(){
+      if(!confirm('Resetar cronômetro?'))return;
+      clearInterval(state.timer.interval);
+      state.timer={seconds:0,running:false,interval:null};
+      updateTimerDisplay();
+      updateTimerButtons();
+      saveState()
+    }
+    function updateTimerDisplay(){
+      const h=Math.floor(state.timer.seconds/3600);
+      const m=Math.floor((state.timer.seconds%3600)/60);
+      const s=state.timer.seconds%60;
+      document.getElementById('timer-display').textContent=`${pad(h)}:${pad(m)}:${pad(s)}`
+    }
+    function updateTimerButtons(){
+      const r=document.getElementById('btn-register');
+      if(r)r.disabled=false
+    }
+    function pad(n){return n<10?'0'+n:String(n)}
+    function formatTime(s){return`${Math.floor(s/3600)}h ${Math.floor((s%3600)/60)}min`}
+
+    function renderSchedule(){
+      const body=document.getElementById('schedule-body');
+      if(!body)return;
+      let html='';
+      const days=['seg','ter','qua','qui','sex','sab','dom'];
+      for(let w=1;w<=state.weeks;w++){
+        html+='<tr>';
+        const wm=state.weekTime[`w${w}`]||0;
+        html+=`<td><div class="week-cell" onclick="openWeekTimeModal('w${w}')"><div class="week-num">S${w}</div>${wm>0?`<div class="week-time">${wm}m</div>`:''}</div></td>`;
+        days.forEach(day=>{
+          const cid=`w${w}_${day}`;
+          if(day==='sab'||day==='dom'){
+            const acts=state.weekend[cid]||[];
+            const txt=acts.length?acts.map(mapWeekendLabel).join(' • '):'+';
+            html+=`<td><div class="day-cell weekend" onclick="openWeekendModal('${cid}')"><span class="cell-text">${txt}</span></div></td>`;
+          }else{
+            const cell=state.schedule[cid];
+            if(cell&&cell.group){
+              const g=GROUPS.find(g=>g.id===cell.group);
+              html+=`<td><div class="day-cell ${g.color}" onclick="openDayModal('${cid}')"><span class="cell-text">${g.name}</span></div></td>`;
+            }else{
+              html+=`<td><div class="day-cell empty" onclick="openDayModal('${cid}')"><span class="cell-text">+</span></div></td>`;
+            }
+          }
+        });
+        html+='</tr>'
+      }
+      body.innerHTML=html
+    }
+
+    function addWeek(){if(state.weeks>=52)return;state.weeks++;saveState();renderSchedule()}
+    function removeWeek(){
+      if(state.weeks<=1)return;
+      const l=state.weeks;
+      ['seg','ter','qua','qui','sex','sab','dom'].forEach(d=>{delete state.schedule[`w${l}_${d}`];delete state.weekend[`w${l}_${d}`]});
+      delete state.weekTime[`w${l}`];
+      state.weeks--;
+      saveState();
+      renderSchedule()
+    }
+
+    function openWeekTimeModal(wid){
+      currentWeek=wid;
+      tempWeekTime=state.weekTime[wid]||0;
+      const t=document.getElementById('week-time-title');
+      const v=document.getElementById('week-time-value');
+      if(t)t.textContent=`Tempo — ${wid.toUpperCase().replace('W','Semana ')}`;
+      if(v)v.textContent=tempWeekTime;
+      openModal('modal-week-time')
+    }
+    function adjustWeekTime(d){tempWeekTime=Math.max(0,tempWeekTime+d);const v=document.getElementById('week-time-value');if(v)v.textContent=tempWeekTime}
+    function saveWeekTime(){if(!currentWeek)return;if(tempWeekTime===0)delete state.weekTime[currentWeek];else state.weekTime[currentWeek]=tempWeekTime;saveState();renderSchedule();closeModal('modal-week-time')}
+
+    function openDayModal(cid){
+      currentCell=cid;
+      const cell=state.schedule[cid]||{};
+      tempGroup=cell.group||null;
+      const t=document.getElementById('day-modal-title');
+      if(t)t.textContent=`Dia — ${cid.toUpperCase().replace('W','S').replace('_',' ')}`;
+      let html='';
+      GROUPS.forEach(g=>{
+        const sel=tempGroup===g.id;
+        html+=`<div class="option-card ${sel?'selected':''}" onclick="selectGroup('${g.id}',this)"><div class="option-title">${g.name}</div><div class="option-subtitle">${g.subjects.join(' | ')}</div></div>`
+      });
+      document.getElementById('groups-container').innerHTML=html;
+      openModal('modal-day')
+    }
+    function selectGroup(gid,el){tempGroup=gid;document.querySelectorAll('#groups-container .option-card').forEach(c=>c.classList.remove('selected'));if(el)el.classList.add('selected')}
+    function saveDay(){if(!currentCell)return;if(!tempGroup)delete state.schedule[currentCell];else state.schedule[currentCell]={group:tempGroup};saveState();renderSchedule();closeModal('modal-day')}
+    function clearDay(){if(!currentCell)return;delete state.schedule[currentCell];saveState();renderSchedule();closeModal('modal-day')}
+
+    function openWeekendModal(cid){
+      currentCell=cid;
+      const acts=state.weekend[cid]||[];
+      const t=document.getElementById('weekend-modal-title');
+      if(t)t.textContent=`Fim de Semana — ${cid.toUpperCase().replace('W','S').replace('_',' ')}`;
+      const opts=[{id:'REV',label:'Revisão'},{id:'SIM',label:'Simulado'},{id:'DISC',label:'Discursiva'},{id:'QST',label:'Questões'},{id:'PROVA',label:'Prova'}];
+      let html='';
+      opts.forEach(o=>{
+        const sel=acts.includes(o.id);
+        html+=`<div class="option-card ${sel?'selected':''}" onclick="toggleWeekendActivity('${o.id}')"><div class="option-title">${o.label} ${sel?'✓':''}</div></div>`
+      });
+      document.getElementById('weekend-options').innerHTML=html;
+      openModal('modal-weekend')
+    }
+    function toggleWeekendActivity(aid){
+      if(!currentCell)return;
+      const acts=state.weekend[currentCell]?[...state.weekend[currentCell]]:[];
+      const i=acts.indexOf(aid);
+      if(i>=0)acts.splice(i,1);else acts.push(aid);
+      if(!acts.length)delete state.weekend[currentCell];else state.weekend[currentCell]=acts;
+      saveState();
+      openWeekendModal(currentCell)
+    }
+    function saveWeekend(){saveState();renderSchedule();closeModal('modal-weekend')}
+    function clearWeekend(){if(!currentCell)return;delete state.weekend[currentCell];saveState();renderSchedule();closeModal('modal-weekend')}
+    function mapWeekendLabel(id){return{REV:'Revisão',SIM:'Simulado',DISC:'Discursiva',QST:'Questões',PROVA:'Prova'}[id]||id}
+
+    function renderContent(){
+      const c=document.getElementById('subjects-container');
+      if(!c)return;
+      let html='';
+      CONTENT_STRUCTURE.forEach((g,gi)=>{
+        html+=`<div class="subject-group"><div class="group-title ${g.color}">${g.group}</div>`;
+        g.subjects.forEach((s,si)=>{
+          const tot=s.topics.length;
+          let done=0;
+          s.topics.forEach(t=>{if(state.progress[`${s.name}|${t}`]===3)done++});
+          const pct=tot?Math.round(done/tot*100):0;
+          html+=`<div class="subject-card glass"><div class="subject-header" onclick="toggleSubject('s${gi}${si}')"><div class="subject-name">${s.name}</div><div class="subject-progress">${pct}%</div></div><div class="subject-body" id="s${gi}${si}">`;
+          s.topics.forEach(t=>{
+            const k=`${s.name}|${t}`;
+            const st=state.progress[k]||0;
+            const lbl=['PENDENTE','AULA OK','REVISADO','DONE'];
+            html+=`<div class="topic-row"><div class="topic-name ${st===3?'done':''}">${t}</div><button class="status-btn" data-s="${st}" onclick="cycleStatus('${escapeQuotes(k)}')">${lbl[st]}</button></div>`
+          });
+          html+=`</div></div>`
+        });
+        html+=`</div>`
+      });
+      c.innerHTML=html;
+      updateProgress()
+    }
+    function toggleSubject(id){const el=document.getElementById(id);if(el)el.classList.toggle('open')}
+    function cycleStatus(k){state.progress[k]=((state.progress[k]||0)+1)%4;saveState();renderContent();updateProgress()}
+    function updateProgress(){
+      let tot=0,done=0;
+      CONTENT_STRUCTURE.forEach(g=>g.subjects.forEach(s=>s.topics.forEach(t=>{tot++;if(state.progress[`${s.name}|${t}`]===3)done++})));
+      const pct=tot?Math.round(done/tot*100):0;
+      const b=document.getElementById('total-progress');
+      if(b)b.textContent=pct+'%'
+    }
+
+    function renderAchievements(){
+      const g=document.getElementById('achievements-grid');
+      if(!g)return;
+      g.style.display='grid';
+      g.style.gridTemplateColumns='repeat(2,1fr)';
+      g.style.gap='10px';
+      g.innerHTML=ACHIEVEMENTS.map(a=>{
+        const c=state.achievements[a.id]||0;
+        return`<div class="glass" style="background:rgba(26,26,26,.66);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;cursor:pointer;position:relative" onclick="unlockAchievement('${a.id}')">${c>0?`<div style="position:absolute;top:10px;right:10px;min-width:22px;height:22px;border-radius:999px;background:var(--gold-light);color:#000;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:950;display:flex;align-items:center;justify-content:center;padding:0 7px">${c}</div>`:''}<div style="font-size:2rem;margin-bottom:6px;color:#86efac">${a.icon}</div><div style="font-size:.86rem;font-weight:950;margin-bottom:4px">${a.name}</div><div style="font-size:.68rem;color:var(--text-dim);margin-bottom:8px">${a.desc}</div><div style="display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(22,101,52,.16);border:1px solid rgba(22,101,52,.22);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:950;color:#86efac">+${a.points} pts</div></div>`
+      }).join('')
+    }
+    function unlockAchievement(id){
+      const a=ACHIEVEMENTS.find(x=>x.id===id);
+      if(!a)return;
+      const c=state.achievements[id]||0;
+      if(!a.repeatable&&c>0){alert('Conquista já desbloqueada!');return}
+      state.achievements[id]=c+1;
+      saveState();
+      renderAchievements();
+      updateMissionProgress();
+      alert(`Conquista!\n${a.name}\n+${a.points} pts (${c+1}x)`)
+    }
+
+    function renderPenalties(){
+      const b=document.getElementById('penalties-grid');
+      if(!b)return;
+      b.style.display='grid';
+      b.style.gridTemplateColumns='repeat(2,1fr)';
+      b.style.gap='10px';
+      b.innerHTML=PENALTIES.map(p=>{
+        const c=state.penalties[p.id]||0;
+        return`<div class="glass" style="background:rgba(153,27,27,.10);border:1px solid rgba(153,27,27,.22);border-radius:14px;padding:14px;text-align:center;cursor:pointer;position:relative" onclick="applyPenalty('${p.id}')">${c>0?`<div style="position:absolute;top:10px;right:10px;min-width:22px;height:22px;border-radius:999px;background:#fca5a5;color:#000;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:950;display:flex;align-items:center;justify-content:center;padding:0 7px">${c}</div>`:''}<div style="font-size:2rem;margin-bottom:6px;color:#fca5a5">${p.icon}</div><div style="font-size:.86rem;font-weight:950;margin-bottom:4px">${p.name}</div><div style="font-size:.68rem;color:rgba(255,255,255,.75);margin-bottom:8px">${p.desc}</div><div style="display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(153,27,27,.16);border:1px solid rgba(153,27,27,.28);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:950;color:#fecaca">${p.points} pts</div></div>`
+      }).join('')
+    }
+    function applyPenalty(id){
+      const p=PENALTIES.find(x=>x.id===id);
+      if(!p)return;
+      state.penalties[id]=(state.penalties[id]||0)+1;
+      saveState();
+      renderPenalties();
+      updateMissionProgress();
+      alert(`Punição: ${p.name}\n${p.points} pts`)
+    }
+    function updateMissionProgress(){
+      let tp=0;
+      ACHIEVEMENTS.forEach(a=>{tp+=(state.achievements[a.id]||0)*a.points});
+      PENALTIES.forEach(p=>{tp+=(state.penalties[p.id]||0)*p.points});
+      const pct=Math.min(100,Math.max(0,tp/15000*100));
+      const e=document.getElementById('total-points');
+      const f=document.getElementById('progress-fill');
+      if(e)e.textContent=tp;
+      if(f)f.style.width=pct+'%'
+    }
+
+    let currentStatsFilter='week';
+    function filterStats(p){currentStatsFilter=p;renderStats()}
+    function renderStats(){
+      const logs=state.studyLog||[];
+      const now=new Date();
+      const today=now.toISOString().split('T')[0];
+      let filtered;
+      if(currentStatsFilter==='day')filtered=logs.filter(l=>l.date===today);
+      else if(currentStatsFilter==='week'){const wa=new Date(now.getTime()-7*864e5);filtered=logs.filter(l=>new Date(l.date+'T00:00:00')>=wa)}
+      else if(currentStatsFilter==='month'){const ma=new Date(now.getTime()-30*864e5);filtered=logs.filter(l=>new Date(l.date+'T00:00:00')>=ma)}
+      else filtered=logs;
+
+      const tm=filtered.reduce((s,l)=>s+(l.time||0),0);
+      const tq=filtered.reduce((s,l)=>s+(l.questions||0),0);
+      const tc=filtered.reduce((s,l)=>s+(l.correct||0),0);
+
+      const h=Math.floor(tm/60),mi=tm%60;
+      const kt=document.getElementById('kpi-time'),kq=document.getElementById('kpi-questions'),ka=document.getElementById('kpi-accuracy');
+      if(kt)kt.textContent=`${h}h ${mi}m`;
+      if(kq)kq.textContent=tq;
+      if(ka)ka.textContent=(tq?Math.round(tc/tq*100):0)+'%';
+
+      const st={};
+      filtered.forEach(l=>{st[l.subject||'—']=(st[l.subject||'—']||0)+(l.time||0)});
+      const sorted=Object.entries(st).sort((a,b)=>b[1]-a[1]).slice(0,6);
+      const mx=sorted.length?Math.max(...sorted.map(x=>x[1])):1;
+      const ch=document.getElementById('chart-subjects');
+
+      if(ch){
+        if(!sorted.length)ch.innerHTML='<div style="text-align:center;color:var(--text-dim);padding:18px">Nenhum dado</div>';
+        else ch.innerHTML=sorted.map(([n,t])=>{
+          const hh=Math.floor(t/60),mm=t%60,w=Math.round(t/mx*100);
+          return`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:.8rem"><span style="font-weight:900">${n}</span><span style="font-family:'JetBrains Mono',monospace;color:var(--text-dim)">${hh}h${mm>0?` ${mm}m`:''}</span></div><div style="height:9px;background:rgba(26,26,26,.70);border-radius:999px;overflow:hidden"><div style="height:100%;width:${w}%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:999px"></div></div></div>`
+        }).join('')
+      }
+
+      const hl=document.getElementById('history-list');
+      if(hl){
+        const rec=logs.slice(-10).reverse();
+        if(!rec.length)hl.innerHTML='<div style="text-align:center;color:var(--text-dim);padding:18px">Nenhum registro</div>';
+        else hl.innerHTML=rec.map(h=>{
+          const d=new Date(h.date+'T00:00:00');
+          const ds=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+          const topic = h.topic ? ` • ${h.topic}` : '';
+          return`<div class="glass" style="background:rgba(26,26,26,.66);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:14px;padding:12px;margin-bottom:10px"><div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:6px"><div style="font-weight:950;color:var(--gold-light)">${h.subject||'—'}</div><div style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text-dim)">${ds}</div></div><div style="color:var(--text-dim);font-size:.78rem">${h.type||'Estudo'}${topic} • ${h.time||0}min${(h.questions||0)>0?` • ${h.questions} questões`:''}${(h.correct||0)>0?` • ${h.correct} acertos`:''}</div></div>`
+        }).join('')
+      }
+    }
+
+    // ======= Assunto no registro =======
+    function flattenSubjectsMap(){
+      const map = {};
+      CONTENT_STRUCTURE.forEach(g=>{
+        g.subjects.forEach(s=>{
+          map[s.name] = Array.isArray(s.topics) ? s.topics.slice() : [];
+        });
+      });
+      map['RICD'] = map['Regimento CD'] || [];
+      return map;
+    }
+
+    function buildRegisterTopicOptions(subjectName){
+      const sel = document.getElementById('reg-topic');
+      if(!sel) return;
+
+      const topicsMap = flattenSubjectsMap();
+      const topics = topicsMap[subjectName] || [];
+
+      let html = '';
+      if(topics.length){
+        html += `<option value="__none">Selecione...</option>`;
+        topics.forEach(t=>{ html += `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`; });
+        html += `<option value="__custom">Outro (digitar)</option>`;
+      }else{
+        html += `<option value="__custom">Digitar assunto...</option>`;
+      }
+      sel.innerHTML = html;
+
+      onRegisterTopicChange();
+    }
+
+    function onRegisterSubjectChange(){
+      const subj = document.getElementById('reg-subject')?.value || '';
+      buildRegisterTopicOptions(subj);
+    }
+
+    function onRegisterTopicChange(){
+      const sel = document.getElementById('reg-topic');
+      const wrap = document.getElementById('reg-topic-custom-wrap');
+      const input = document.getElementById('reg-topic-custom');
+      if(!sel || !wrap) return;
+
+      const v = sel.value;
+      const needsCustom = (v === '__custom');
+      wrap.style.display = needsCustom ? 'block' : 'none';
+
+      if(needsCustom){
+        if(input) input.value = input.value || '';
+      }else{
+        if(input) input.value = '';
+      }
+    }
+
+    function openRegisterModal(fromStop=false){
+      if(fromStop){
+        clearInterval(state.timer.interval);
+        state.timer.running=false;
+        state.timer.interval=null;
+        updateTimerButtons();
+        saveState();
+      }
+
+      const tm=Math.floor(state.timer.seconds/60);
+      if(tm>0){
+        document.getElementById('reg-time').value=tm;
+        document.getElementById('timer-suggestion').textContent=`Sugestão: ${formatTime(state.timer.seconds)}`;
+      }else{
+        document.getElementById('reg-time').value='';
+        document.getElementById('timer-suggestion').textContent='';
+      }
+
+      const subj = document.getElementById('reg-subject')?.value || 'Português';
+      buildRegisterTopicOptions(subj);
+
+      openModal('modal-register');
+    }
+
+    function saveRegister(){
+      const subj=document.getElementById('reg-subject').value;
+      const type=document.getElementById('reg-type').value;
+      const tm=parseInt(document.getElementById('reg-time').value)||0;
+      const q=parseInt(document.getElementById('reg-questions').value)||0;
+      const c=parseInt(document.getElementById('reg-correct').value)||0;
+
+      const topicSel=document.getElementById('reg-topic');
+      const topicCustom=document.getElementById('reg-topic-custom');
+      let topic='';
+      if(topicSel){
+        if(topicSel.value === '__custom'){
+          topic = (topicCustom?.value || '').trim();
+        }else if(topicSel.value === '__none'){
+          topic = '';
+        }else{
+          topic = (topicSel.value || '').trim();
+        }
+      }
+
+      if(tm<=0){alert('Informe o tempo.');return}
+
+      state.studyLog.push({
+        date:new Date().toISOString().split('T')[0],
+        subject:subj,
+        topic:topic,
+        type:type,
+        time:tm,
+        questions:q,
+        correct:c
+      });
+
+      clearInterval(state.timer.interval);
+      state.timer={seconds:0,running:false,interval:null};
+      updateTimerDisplay();
+      updateTimerButtons();
+
+      saveState();
+      closeModal('modal-register');
+
+      document.getElementById('reg-time').value='';
+      document.getElementById('reg-questions').value='';
+      document.getElementById('reg-correct').value='';
+      if(document.getElementById('reg-topic-custom')) document.getElementById('reg-topic-custom').value='';
+      if(document.getElementById('timer-suggestion')) document.getElementById('timer-suggestion').textContent='';
+
+      alert(`Salvo! ${subj}${topic?` • ${topic}`:''} • ${type} • ${tm}min`);
+      renderStats();
+    }
+
+    function exportData(){
+      const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+      const u=URL.createObjectURL(b);
+      const a=document.createElement('a');
+      a.href=u;
+      a.download=`operacao_ata_backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(u)
+    }
+    function importData(inp){
+      const f=inp.files[0];
+      if(!f)return;
+      const r=new FileReader();
+      r.onload=e=>{
+        try{
+          const imp=JSON.parse(e.target.result);
+          state={...state,...imp};
+          if(!state.studyLog)state.studyLog=[];
+          if(!state.timer)state.timer={seconds:0,running:false,interval:null};
+          if(!state.ui)state.ui={guideAcc:{},guidePhases:{}};
+          if(!state.ui.guideAcc)state.ui.guideAcc={};
+          if(!state.ui.guidePhases)state.ui.guidePhases={};
+          if(typeof state.missionNotes!=='string')state.missionNotes="";
+          saveState();
+          location.reload()
+        }catch(e){alert('Erro!')}
+      };
+      r.readAsText(f)
+    }
+
+    function renderGuide(){
+      const t=document.getElementById('guide-details');
+      if(!t)return;
+      t.innerHTML=`
+${guideSection('Checklist de Etapas',`<div class="phase-list">${GUIDE_PHASES.map(p=>{const d=!!(state.ui&&state.ui.guidePhases&&state.ui.guidePhases[p.id]);return`<div class="phase-item ${d?'done':''}" onclick="toggleGuidePhase('${p.id}')"><div class="phase-check">✓</div><div class="phase-text"><div class="phase-title">${p.title}</div><div class="phase-desc">${p.desc}</div></div></div>`}).join('')}</div>`)}
+${guideAccordion('crono','📅 Cronograma Oficial Previsto',`<table class="guide-table"><thead><tr><th>Data</th><th>Atividade</th></tr></thead><tbody><tr><td style="white-space:nowrap;color:#fde68a">29/01 a 20/02/2026</td><td>Inscrições e pedido de isenção</td></tr><tr><td style="white-space:nowrap">23 e 24/02/2026</td><td>Verificação de foto e novo envio</td></tr><tr><td style="white-space:nowrap">27/02 a 03/03/2026</td><td>Situação provisória da isenção</td></tr><tr><td style="white-space:nowrap">02 e 03/03/2026</td><td>Recurso contra indeferimento da isenção</td></tr><tr><td style="white-space:nowrap">10/03/2026</td><td>Situação final da isenção</td></tr><tr><td style="white-space:nowrap;color:#fca5a5">12/03/2026</td><td>Data limite pagamento da taxa</td></tr><tr><td style="white-space:nowrap">20 a 24/03/2026</td><td>Situação provisória atendimento especializado</td></tr><tr><td style="white-space:nowrap">01/04/2026</td><td>Situação final atendimento especializado</td></tr><tr><td style="white-space:nowrap;color:#fde68a">10/04/2026</td><td>Divulgação dos locais de prova</td></tr><tr><td style="white-space:nowrap;color:#ef4444;font-weight:950">26/04/2026</td><td><b>DIA D: Provas Objetivas + Discursiva</b></td></tr><tr><td style="white-space:nowrap">28/04/2026</td><td>Gabaritos preliminares + padrão da discursiva</td></tr><tr><td style="white-space:nowrap">29 e 30/04/2026</td><td>Recursos contra gabaritos</td></tr><tr><td style="white-space:nowrap;color:#86efac">22/05/2026</td><td>Resultado final nas objetivas</td></tr><tr><td style="white-space:nowrap">02/06/2026</td><td>Convocação heteroidentificação</td></tr><tr><td style="white-space:nowrap">07/06/2026</td><td>Procedimento telepresencial</td></tr><tr><td style="white-space:nowrap;color:#86efac">26/06/2026</td><td>Resultado provisório da discursiva</td></tr><tr><td style="color:var(--text-dim)">A definir</td><td>TAF, Saúde, Psicológica, Sindicância, Formação</td></tr></tbody></table>`)}
+${guideAccordion('obj','📝 Provas Objetivas (P1 + P2)',`<div class="guide-sub">Estrutura</div><ul class="guide-bullet"><li><b>P1 — Gerais:</b> Português, Inglês, RLM, Constitucional+RICD, Administrativo, Informática.</li><li><b>P2 — Específicos:</b> Penal/PP, Criminologia/Criminalística, DH, Inteligência.</li><li>Modelo <b>Certo/Errado</b>.</li></ul><div class="guide-sub">Pontuação</div><ul class="guide-bullet"><li>Acerto: <b>+1,00</b> | Erro: <b>−1,00</b> | Branco/Dupla: 0,00.</li></ul><div class="guide-sub">Eliminação</div><ul class="guide-bullet"><li>P1 mín: <b>18,00</b> | P2 mín: <b>27,00</b> | Total mín: <b>54,00</b>.</li><li>Top <b>104</b> por lista seguem para discursiva.</li></ul>`)}
+${guideAccordion('disc','✍️ Prova Discursiva (P3)',`<div class="guide-sub">Composição</div><ul class="guide-bullet"><li><b>Q1</b> (15 pts, 20 linhas): Inteligência.</li><li><b>Q2</b> (15 pts, 20 linhas): Criminologia/Criminalística OU Direitos Humanos.</li><li><b>Peça Técnica</b> (30 pts, 50 linhas): Penal + Processo Penal.</li><li>Total: <b>60,00 pts</b>.</li></ul><div class="guide-sub">Fórmulas</div><div class="guide-formula">NQi = NCi − 3 × NEi ÷ TLi</div><div style="font-size:.78rem;color:var(--text-dim);margin-bottom:6px">Questões. NC=conteúdo, NE=erros, TL=linhas.</div><div class="guide-formula">NPT = NC − 6 × NE ÷ TL</div><div style="font-size:.78rem;color:var(--text-dim);margin-bottom:6px">Peça técnica.</div><div class="guide-formula">NPD = NQ1 + NQ2 + NPT ≥ 30,00</div>`)}
+${guideAccordion('taf','🏋️ TAF — Teste de Aptidão Física',`<div style="font-size:.82rem;color:var(--text-dim);margin-bottom:10px">Eliminatório. 5 testes sequenciais. Atestado médico ≤ 30 dias. Filmado.</div><table class="guide-table"><thead><tr><th>Teste</th><th>Masc.</th><th>Fem.</th><th>2ª Tent.</th></tr></thead><tbody><tr><td><b>Barra Fixa</b></td><td>5 rep. dinâmicas</td><td>15s isometria</td><td>Sim</td></tr><tr><td><b>Impulsão Horiz.</b></td><td>2,05 m</td><td>1,60 m</td><td>Sim</td></tr><tr><td><b>Shuttle Run</b></td><td>máx 13s</td><td>máx 15s</td><td>Sim</td></tr><tr><td><b>Natação 50m</b></td><td>máx 56s</td><td>máx 64s</td><td>Sim</td></tr><tr><td><b>Corrida 12min</b></td><td>2.200m</td><td>1.800m</td><td>Não</td></tr></tbody></table><ul class="guide-bullet" style="margin-top:10px"><li>Natação: piscina 25m, nado livre, sem bloco de partida.</li><li>Shuttle run: 9,14m, 2 blocos de madeira.</li><li>Gestantes: adiamento 120–365 dias pós-parto.</li></ul>`)}
+${guideAccordion('svp','🔍 Sindicância de Vida Pregressa',`<ul class="guide-bullet"><li>FIC preenchida (manter atualizada).</li><li>RG, CPF, reservista (masc.), título eleitor + comprovante.</li><li>CTPS ou declaração de emprego.</li><li>Comprovante de residência.</li><li>Certidões negativas cíveis, criminais, protestos (5 anos).</li><li>Antecedentes da Polícia Civil e Justiça Federal (5 anos).</li><li>Declarações de IR (5 anos).</li><li><b>Omissão na FIC = eliminação a qualquer tempo.</b></li><li>Certidões: expedidas ≤ 90 dias antes da entrega.</li></ul>`)}
+${guideAccordion('psi','🧠 Avaliação Psicológica',`<div class="guide-sub">1º Momento</div><ul class="guide-bullet"><li>Presença obrigatória, <b>sem caráter eliminatório</b>.</li><li>Testes de personalidade, raciocínio, habilidades.</li></ul><div class="guide-sub">2º Momento (Curso de Formação)</div><ul class="guide-bullet"><li><b>Eliminatório</b>: análise conjunta com 1º momento.</li><li>Apto ou Inapto. Recurso: 2 dias úteis.</li></ul>`)}
+${guideAccordion('med','🏥 Avaliação de Saúde',`<div class="guide-sub">Exames de Sangue</div><ul class="guide-bullet"><li>Hemograma, Glicemia, HbA1c, Ureia, Creatinina, Ác. Úrico.</li><li>Perfil Lipídico, Proteínas totais, Bilirrubinas, TGO/TGP/GGT, TSH/T4.</li><li>Sorologias: Chagas, Sífilis, Hepatites A/B/C, Tipagem ABO+Rh.</li><li>Beta-HCG (fem.), PSA (masc. ≥45).</li></ul><div class="guide-sub">Urina/Fezes</div><ul class="guide-bullet"><li>EAS + EPF.</li></ul><div class="guide-sub">Toxicológico</div><ul class="guide-bullet"><li>Queratina, janela ≥90 dias, coleta ≤60 dias antes.</li><li>THC, cocaína, anfetaminas, opiáceos, PCP.</li></ul><div class="guide-sub">Especialidades</div><ul class="guide-bullet"><li><b>Cardiológica:</b> ECG + ergométrico + eco Doppler.</li><li><b>Pulmonar:</b> espirometria + RX tórax.</li><li><b>Psiquiátrica:</b> laudo completo (Anexo V).</li><li><b>Oftalmológica:</b> acuidade, tonometria, Ishihara, campimetria, topografia, retinografia.</li><li><b>Otorrino:</b> audiometria completa.</li><li><b>Ortopédica:</b> RX coluna (Cobb/Ferguson) + RX joelhos.</li><li><b>Abdômen:</b> ecografia total.</li></ul><div class="guide-sub">Prazos</div><ul class="guide-bullet"><li>Laudos: ≤ <b>180 dias</b>. Toxicológico: ≤ <b>60 dias</b>.</li></ul>`)}
+${guideAccordion('nota','📊 Nota Final e Desempate',`<div class="guide-formula">NF = (P1+P2) + NPD</div><div class="guide-sub">Desempate</div><ul class="guide-bullet"><li>1º Idade ≥ 60 | 2º Maior nota P2 | 3º Mais acertos P2 | 4º Maior P3 | 5º Mais acertos P1 | 6º Maior idade | 7º Jurado.</li></ul><div class="guide-sub">Curso de Formação</div><ul class="guide-bullet"><li>Até <b>480h presenciais</b> em Brasília, tempo integral.</li><li>Auxílio: <b>50% da remuneração</b> (≈ R$ 10.664).</li><li>Avaliação teórica + prática + psicológica (eliminatória).</li><li>Validade do concurso: <b>2 anos + 2 prorrogáveis</b>.</li></ul>`)}
+`
+    }
+
+    function toggleGuidePhase(id){
+      if(!state.ui)state.ui={guideAcc:{},guidePhases:{}};
+      if(!state.ui.guidePhases)state.ui.guidePhases={};
+      state.ui.guidePhases[id]=!state.ui.guidePhases[id];
+      saveState();
+      renderGuide()
+    }
+    function guideSection(title,html){
+      return`<div class="glass" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px"><div style="font-weight:950;color:var(--gold-light);margin-bottom:10px">${title}</div><div>${html}</div></div>`
+    }
+    function guideAccordion(id,title,html){
+      const o=state.ui&&state.ui.guideAcc&&state.ui.guideAcc[id];
+      return`<div class="guide-acc"><div class="guide-acc-header ${o?'open':''}" onclick="toggleGuideAcc('${id}')"><span class="acc-title">${title}</span><span class="acc-arrow">▸</span></div><div class="guide-acc-body ${o?'open':''}">${html}</div></div>`
+    }
+    function toggleGuideAcc(id){
+      if(!state.ui)state.ui={guideAcc:{},guidePhases:{}};
+      if(!state.ui.guideAcc)state.ui.guideAcc={};
+      state.ui.guideAcc[id]=!state.ui.guideAcc[id];
+      saveState();
+      renderGuide()
+    }
+
+    function openModal(id){const m=document.getElementById(id);if(m)m.classList.add('open')}
+    function closeModal(id){const m=document.getElementById(id);if(m)m.classList.remove('open')}
+
+    function escapeQuotes(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+    function escapeHtml(s){
+      return String(s)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;');
+    }
+  </script>
+
+  <!-- Registro do Service Worker para PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registrado:', registration.scope);
+          })
+          .catch(error => {
+            console.log('Falha ao registrar Service Worker:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
