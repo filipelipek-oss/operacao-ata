@@ -1,0 +1,65 @@
+{
+  "name": "Operação ATA Consolidada - PLF 2026",
+  "short_name": "ATA PLF",
+  "description": "Plano tático de estudos para o concurso de Policial Legislativo Federal da Câmara dos Deputados",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "id": "operacao-ata-plf-2026",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "Plano Semanal",
+      "short_name": "Plano",
+      "description": "Ver cronograma de estudos",
+      "url": "./index.html#plan",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Missões",
+      "short_name": "Missões",
+      "description": "Acompanhar progresso",
+      "url": "./index.html#mission",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cronômetro",
+      "short_name": "Timer",
+      "description": "Iniciar cronômetro de estudos",
+      "url": "./index.html#timer",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": []
+}
