@@ -1,65 +1,50 @@
 {
-  "name": "Operação ATA Consolidada - PLF 2026",
+  "name": "OPERAÇÃO ATA | Policial Legislativo Federal",
   "short_name": "ATA PLF",
-  "description": "Plano tático de estudos para o concurso de Policial Legislativo Federal da Câmara dos Deputados",
+  "description": "Sistema tático de estudos para o concurso PLF 2026",
   "start_url": "./index.html",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
   "orientation": "portrait",
-  "id": "operacao-ata-plf-2026",
+  "scope": "./",
   "icons": [
     {
       "src": "assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "categories": ["education", "productivity"],
-  "prefer_related_applications": false,
-  "related_applications": [],
+  "screenshots": [],
   "shortcuts": [
     {
-      "name": "Plano Semanal",
+      "name": "Plano Tático",
       "short_name": "Plano",
-      "description": "Ver cronograma de estudos",
+      "description": "Acessar plano semanal",
       "url": "./index.html#plan",
       "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Missões",
       "short_name": "Missões",
-      "description": "Acompanhar progresso",
+      "description": "Acompanhar missões",
       "url": "./index.html#mission",
       "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Cronômetro",
-      "short_name": "Timer",
-      "description": "Iniciar cronômetro de estudos",
-      "url": "./index.html#timer",
+      "name": "Estatísticas",
+      "short_name": "Stats",
+      "description": "Ver estatísticas",
+      "url": "./index.html#stats",
       "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
     }
-  ],
-  "screenshots": []
+  ]
 }
